@@ -1,0 +1,146 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define the Node structure
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* head = NULL;
+
+// Function to insert a node at the beginning
+void insertAtBeginning(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (!newNode) {
+        printf("Memory allocation failed.\n");
+        return;
+    }
+    newNode->data = value;
+    newNode->next = head;
+    head = newNode;
+    printf("Inserted %d at the beginning.\n", value);
+}
+
+// Function to insert a node at the end
+void insertAtEnd(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (!newNode) {
+        printf("Memory allocation failed.\n");
+        return;
+    }
+    newNode->data = value;
+    newNode->next = NULL;
+    if (head == NULL) {
+        head = newNode;
+        printf("Inserted %d as the first element.\n", value);
+        return;
+    }
+    struct Node* temp = head;
+    while (temp->next != NULL)
+        temp = temp->next;
+    temp->next = newNode;
+    printf("Inserted %d at the end.\n", value);
+}
+
+// Function to delete a node from the beginning
+void deleteFromBeginning() {
+    if (head == NULL) {
+        printf("List is empty. Nothing to delete.\n");
+        return;
+    }
+    struct Node* temp = head;
+    head = head->next;
+    printf("Deleted %d from the beginning.\n", temp->data);
+    free(temp);
+}
+
+// Function to delete a node from the end
+void deleteFromEnd() {
+    if (head == NULL) {
+        printf("List is empty. Nothing to delete.\n");
+        return;
+    }
+    if (head->next == NULL) {
+        printf("Deleted %d from the end.\n", head->data);
+        free(head);
+        head = NULL;
+        return;
+    }
+    struct Node* temp = head;
+    while (temp->next->next != NULL)
+        temp = temp->next;
+    printf("Deleted %d from the end.\n", temp->next->data);
+    free(temp->next);
+    temp->next = NULL;
+}
+
+// Function to display the linked list
+void displayList() {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    struct Node* temp = head;
+    printf("Linked List: ");
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+    int choice, value;
+    while (1) {
+        printf("\n--- Linked List Operations ---\n");
+        printf("1. Insert at Beginning\n");
+        printf("2. Insert at End\n");
+        printf("3. Delete from Beginning\n");
+        printf("4. Delete from End\n");
+        printf("5. Display List\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+        if (scanf("%d", &choice) != 1) {
+            printf("Invalid input. Exiting.\n");
+            break;
+        }
+        switch (choice) {
+            case 1:
+                printf("Enter value to insert at beginning: ");
+                if (scanf("%d", &value) != 1) {
+                    printf("Invalid input.\n");
+                    break;
+                }
+                insertAtBeginning(value);
+                break;
+            case 2:
+                printf("Enter value to insert at end: ");
+                if (scanf("%d", &value) != 1) {
+                    printf("Invalid input.\n");
+                    break;
+                }
+                insertAtEnd(value);
+                break;
+            case 3:
+                deleteFromBeginning();
+                break;
+            case 4:
+                deleteFromEnd();
+                break;
+            case 5:
+                displayList();
+                break;
+            case 6:
+                printf("Exiting program.\n");
+                // Free all nodes before exiting
+                while (head != NULL) {
+                    deleteFromBeginning();
+                }
+                return 0;
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    }
+    return 0;
+}
